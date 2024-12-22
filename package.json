@@ -1,0 +1,39 @@
+{
+  "name": "requery",
+  "version": "1.0.0",
+  "description": "ReQuery is a query syntax for REST APIs that provides a powerful and expressive way to structure filters, sorts, field selections, pagination, and identifier extraction directly from the URL. It balances flexibility, readability, and compatibility with standard URL practices.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "build:types": "tsc -p tsconfig-build-types.json",
+    "check:types": "tsc",
+    "check:types:watch": "tsc --watch",
+    "coverage": "",
+    "lint": "standard",
+    "lint:fix": "standard --fix",
+    "release:first": "npm run release -- --first-release",
+    "test": "",
+    "test:watch": "",
+    "prepare": "husky"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "commitizen": "^4.3.1",
+    "cz-conventional-changelog": "^3.3.0",
+    "husky": "^9.1.7",
+    "standard": "^17.1.2",
+    "typescript": "^5.7.2"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "standard": {
+    "includes": [
+      "test"
+    ]
+  }
+}
