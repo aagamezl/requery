@@ -49,6 +49,7 @@ export const parser = (url) => {
  */
 const parseFilter = (filterString) => {
   const tokens = tokenize(filterString)
+
   return parseExpression(tokens)
 }
 
@@ -100,23 +101,26 @@ const tokenize = (input) => {
     if (char === '(') {
       if (buffer.trim()) {
         if (!/;$/.test(buffer.trim())) {
-          throw new Error('Invalid syntax: missing delimiter before "("')
+          throw new TypeError('Invalid syntax: missing delimiter before "("')
         }
-        tokens.push(buffer.trim())
-        buffer = ''
       }
+
       tokens.push('(')
     } else if (char === ')') {
       if (buffer.trim()) {
         tokens.push(buffer.trim())
+
         buffer = ''
       }
+
       tokens.push(')')
     } else if (char === ';' || char === '|') {
       if (buffer.trim()) {
         tokens.push(buffer.trim())
+
         buffer = ''
       }
+
       tokens.push(char === ';' ? 'and' : 'or')
     } else {
       buffer += char
@@ -136,6 +140,26 @@ const tokenize = (input) => {
  * @param {string[]} tokens - The list of tokens.
  * @returns {FilterGroup} - The parsed filter group.
  */
+// const parseExpression = (tokens) => {
+//   /** @type {FilterGroup} */
+//   const currentGroup = { type: 'group', logical: 'and', conditions: [] }
+
+//   while (tokens.length > 0) {
+//     const token = tokens.shift()
+
+//     if (token === '(') {
+//       currentGroup.conditions.push(parseExpression(tokens))
+//     } else if (token === ')') {
+//       break
+//     } else if (token === 'and' || token === 'or') {
+//       currentGroup.logical = token
+//     } else {
+//       currentGroup.conditions.push(parseCondition(token))
+//     }
+//   }
+
+//   return currentGroup
+// }
 const parseExpression = (tokens) => {
   const currentGroup = { type: 'group', logical: 'and', conditions: [] }
 
@@ -153,6 +177,7 @@ const parseExpression = (tokens) => {
     }
   }
 
+  // ✅ Always return a group, even for a single condition
   return currentGroup
 }
 
@@ -162,11 +187,11 @@ const parseExpression = (tokens) => {
  * @param {string} conditionString - The condition string to parse.
  * @returns {FilterCondition} - The parsed filter condition.
  */
-const parseCondition = (conditionString) => {
+const parseCondition = (conditionString = '') => {
   const match = conditionString.match(/^([\w\\.?]+)\[([\w]+)](.+)$/)
 
   if (!match) {
-    throw new Error(`Invalid filter condition: "${conditionString}"`)
+    throw new TypeError(`Invalid filter condition: "${conditionString}"`)
   }
 
   const [, field, operator, value] = match
@@ -231,6 +256,7 @@ const parseSort = (value) => {
  */
 const parseFields = (key, value) => {
   const [resourceType, fields] = value.split(':')
+  /** @type {Record<string, string[]>} */
   const result = {}
 
   if (!resourceType || !fields) {
